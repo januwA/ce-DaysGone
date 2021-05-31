@@ -1,0 +1,1249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="34">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>39</ID>
+      <Description>"HP"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"DaysGone.exe"+6DFAF5)
+define(bytes,F3 41 0F 11 84 24 C4 1F 00 00)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$1000,"DaysGone.exe"+6DFAF5)
+
+label(code)
+label(return)
+label(enemy)
+
+newmem:
+  pushf
+  cmp [r12+1B8],3
+  jne enemy
+  movss xmm0,[r12+00001FD4] // hp max
+  jmp code
+
+enemy:
+  // 一击必杀,注意NPC被秒杀
+  xorps xmm0,xmm0
+
+  // 倍伤
+{
+  push edx
+  mov edx,100 // 几倍?
+  movd xmm12,edx
+  mulss xmm7,xmm12
+  subss xmm0,xmm7
+  movd xmm6,eax
+  pop edx
+}
+
+  jmp code
+
+code:
+  popf
+  movss [r12+00001FC4],xmm0
+  jmp return
+
+address:
+  jmp newmem
+  nop 5
+return:
+
+[DISABLE]
+address:
+  db bytes
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: DaysGone.exe+6DFAF5
+
+DaysGone.exe+6DFABD: 41 8B 84 24 B0 17 00 00        - mov eax,[r12+000017B0]
+DaysGone.exe+6DFAC5: 41 89 84 24 58 17 00 00        - mov [r12+00001758],eax
+DaysGone.exe+6DFACD: 41 C6 84 24 54 17 00 00 00     - mov byte ptr [r12+00001754],00
+DaysGone.exe+6DFAD6: 75 0D                          - jne DaysGone.exe+6DFAE5
+DaysGone.exe+6DFAD8: BA 02 00 00 00                 - mov edx,00000002
+DaysGone.exe+6DFADD: 49 8B CC                       - mov rcx,r12
+DaysGone.exe+6DFAE0: E8 0B C8 00 00                 - call DaysGone.exe+6EC2F0
+DaysGone.exe+6DFAE5: F3 41 0F 10 84 24 C4 1F 00 00  - movss xmm0,[r12+00001FC4]
+DaysGone.exe+6DFAEF: 32 DB                          - xor bl,bl
+DaysGone.exe+6DFAF1: F3 0F 5C C7                    - subss xmm0,xmm7
+// ---------- INJECTING HERE ----------
+DaysGone.exe+6DFAF5: F3 41 0F 11 84 24 C4 1F 00 00  - movss [r12+00001FC4],xmm0
+// ---------- DONE INJECTING  ----------
+DaysGone.exe+6DFAFF: 41 38 9C 24 D3 07 00 00        - cmp [r12+000007D3],bl
+DaysGone.exe+6DFB07: 74 2B                          - je DaysGone.exe+6DFB34
+DaysGone.exe+6DFB09: 49 8B CC                       - mov rcx,r12
+DaysGone.exe+6DFB0C: E8 EF A5 FD FF                 - call DaysGone.exe+6BA100
+DaysGone.exe+6DFB11: 84 C0                          - test al,al
+DaysGone.exe+6DFB13: 74 1F                          - je DaysGone.exe+6DFB34
+DaysGone.exe+6DFB15: 41 80 FE 0F                    - cmp r14l,0F
+DaysGone.exe+6DFB19: 74 19                          - je DaysGone.exe+6DFB34
+DaysGone.exe+6DFB1B: 49 8B CC                       - mov rcx,r12
+DaysGone.exe+6DFB1E: E8 FD CB FC FF                 - call DaysGone.exe+6AC720
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>0</ID>
+      <Description>"无限子弹"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(addr1, "DaysGone.exe"+81D5C6)
+define(addr2, "DaysGone.exe"+82FAA4)
+define(addr3, "DaysGone.exe"+82CF88)
+
+define(bytes1, 41 FF 8E 00 28 00 00)
+define(bytes2, 89 87 00 28 00 00)
+define(bytes3, 89 83 00 28 00 00)
+
+[ENABLE]
+assert(addr1,bytes1) // 单发子弹
+assert(addr2,bytes2) // 冲锋枪1
+assert(addr3,bytes3) // 冲锋枪2
+
+addr1:
+  db 41 FF 86 00 28 00 00
+
+addr2:
+  db 90 90 90 90 90 90
+
+addr3:
+  db 90 90 90 90 90 90
+
+[DISABLE]
+addr1:
+  db bytes1
+
+addr2:
+  db bytes2
+
+addr3:
+  db bytes3
+{
+// ORIGINAL CODE - INJECTION POINT: DaysGone.exe+81D5C6
+
+DaysGone.exe+81D591: 41 C6 86 2C 18 00 00 01     - mov byte ptr [r14+0000182C],01
+DaysGone.exe+81D599: FF 90 40 01 00 00           - call qword ptr [rax+00000140]
+DaysGone.exe+81D59F: 48 8B C8                    - mov rcx,rax
+DaysGone.exe+81D5A2: E8 29 77 14 02              - call DaysGone.exe+2964CD0
+DaysGone.exe+81D5A7: F3 0F 58 05 D1 C3 03 03     - addss xmm0,[DaysGone.exe+3859980]
+DaysGone.exe+81D5AF: F3 41 0F 11 86 28 18 00 00  - movss [r14+00001828],xmm0
+DaysGone.exe+81D5B8: 40 84 F6                    - test sil,sil
+DaysGone.exe+81D5BB: 74 09                       - je DaysGone.exe+81D5C6
+DaysGone.exe+81D5BD: 45 38 A6 A8 03 00 00        - cmp [r14+000003A8],r12l
+DaysGone.exe+81D5C4: 75 07                       - jne DaysGone.exe+81D5CD
+// ---------- INJECTING HERE ----------
+DaysGone.exe+81D5C6: 41 FF 8E 00 28 00 00        - dec [r14+00002800]
+// ---------- DONE INJECTING  ----------
+DaysGone.exe+81D5CD: 40 84 F6                    - test sil,sil
+DaysGone.exe+81D5D0: 75 1D                       - jne DaysGone.exe+81D5EF
+DaysGone.exe+81D5D2: 45 39 A6 00 28 00 00        - cmp [r14+00002800],r12d
+DaysGone.exe+81D5D9: 75 14                       - jne DaysGone.exe+81D5EF
+DaysGone.exe+81D5DB: 41 83 BE 0C 29 00 00 01     - cmp dword ptr [r14+0000290C],01
+DaysGone.exe+81D5E3: 7E 0A                       - jle DaysGone.exe+81D5EF
+DaysGone.exe+81D5E5: 49 8B CE                    - mov rcx,r14
+DaysGone.exe+81D5E8: E8 D3 C9 97 00              - call DaysGone.exe+1199FC0
+DaysGone.exe+81D5ED: EB 08                       - jmp DaysGone.exe+81D5F7
+DaysGone.exe+81D5EF: 49 8B CE                    - mov rcx,r14
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>18</ID>
+      <Description>"无准星扩散"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(addr1,"DaysGone.exe"+850DFD)
+define(addr2,"DaysGone.exe"+850E10)
+define(addr3,"DaysGone.exe"+81292D)
+define(addr4,"DaysGone.exe"+8410D5)
+
+define(bytes1,F3 0F 11 83 74 29 00 00)
+define(bytes2,F3 44 0F 11 8B 74 29 00 00)
+define(bytes3,C7 87 74 29 00 00 00 00 80 3F)
+define(bytes4,F3 0F 11 8F 74 29 00 00)
+
+[ENABLE]
+assert(addr1,bytes1)
+assert(addr2,bytes2)
+assert(addr3,bytes3)
+assert(addr4,bytes4)
+
+addr1:
+  db 90 90 90 90 90 90 90 90
+
+addr2:
+  db 90 90 90 90 90 90 90 90 90
+
+addr3:
+  db 90 90 90 90 90 90 90 90 90 90
+
+addr4:
+  db 90 90 90 90 90 90 90 90
+
+[DISABLE]
+addr1:
+  db bytes1
+addr2:
+  db bytes2
+addr3:
+  db bytes3
+addr4:
+  db bytes4
+
+{
+// ORIGINAL CODE - INJECTION POINT: DaysGone.exe+850DFD
+
+DaysGone.exe+850DCE: E8 DD D5 FC FF              - call DaysGone.exe+81E3B0
+DaysGone.exe+850DD3: F3 0F 10 83 74 29 00 00     - movss xmm0,[rbx+00002974]
+DaysGone.exe+850DDB: 41 0F 28 C8                 - movaps xmm1,xmm8
+DaysGone.exe+850DDF: 84 C0                       - test al,al
+DaysGone.exe+850DE1: 74 0A                       - je DaysGone.exe+850DED
+DaysGone.exe+850DE3: F3 0F 59 8B 18 2A 00 00     - mulss xmm1,[rbx+00002A18]
+DaysGone.exe+850DEB: EB 08                       - jmp DaysGone.exe+850DF5
+DaysGone.exe+850DED: F3 0F 59 8B 20 2A 00 00     - mulss xmm1,[rbx+00002A20]
+DaysGone.exe+850DF5: F3 0F 5C C1                 - subss xmm0,xmm1
+DaysGone.exe+850DF9: 41 0F 2F C1                 - comiss xmm0,xmm9
+// ---------- INJECTING HERE ----------
+DaysGone.exe+850DFD: F3 0F 11 83 74 29 00 00     - movss [rbx+00002974],xmm0
+// ---------- DONE INJECTING  ----------
+DaysGone.exe+850E05: 72 09                       - jb DaysGone.exe+850E10
+DaysGone.exe+850E07: F3 41 0F 5D C2              - minss xmm0,xmm10
+DaysGone.exe+850E0C: 44 0F 28 C8                 - movaps xmm9,xmm0
+DaysGone.exe+850E10: F3 44 0F 11 8B 74 29 00 00  - movss [rbx+00002974],xmm9
+DaysGone.exe+850E19: EB 38                       - jmp DaysGone.exe+850E53
+DaysGone.exe+850E1B: 44 0F 2F C0                 - comiss xmm8,xmm0
+DaysGone.exe+850E1F: 76 05                       - jna DaysGone.exe+850E26
+DaysGone.exe+850E21: 0F 28 C7                    - movaps xmm0,xmm7
+DaysGone.exe+850E24: EB 05                       - jmp DaysGone.exe+850E2B
+DaysGone.exe+850E26: F3 41 0F 5C C0              - subss xmm0,xmm8
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>19</ID>
+      <Description>"反冲"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"DaysGone.exe"+6D62A0)
+define(bytes,F3 0F 10 7E 24)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$1000,"DaysGone.exe"+6D62A0)
+
+label(code)
+label(return)
+
+newmem:
+  mov [rsi+20],0 // y轴偏移
+  mov [rsi+24],0 // y轴偏移
+  mov [rsi+2C],0 // x轴偏移
+  mov [rsi+30],0 // x轴偏移
+code:
+  movss xmm7,[rsi+24]
+  jmp return
+
+address:
+  jmp newmem
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: DaysGone.exe+6D62A0
+
+DaysGone.exe+6D626A: F3 41 0F 59 F1           - mulss xmm6,xmm9
+DaysGone.exe+6D626F: FF 15 43 B5 10 03        - call qword ptr [DaysGone.exe+37E17B8]
+DaysGone.exe+6D6275: F3 0F 5C FE              - subss xmm7,xmm6
+DaysGone.exe+6D6279: 66 0F 6E C0              - movd xmm0,eax
+DaysGone.exe+6D627D: 0F 5B C0                 - cvtdq2ps xmm0,xmm0
+DaysGone.exe+6D6280: F3 0F 59 05 D8 E4 14 03  - mulss xmm0,[DaysGone.exe+3824760]
+DaysGone.exe+6D6288: F3 0F 59 C7              - mulss xmm0,xmm7
+DaysGone.exe+6D628C: F3 0F 58 C6              - addss xmm0,xmm6
+DaysGone.exe+6D6290: F3 0F 58 83 08 1D 00 00  - addss xmm0,[rbx+00001D08]
+DaysGone.exe+6D6298: F3 0F 11 83 08 1D 00 00  - movss [rbx+00001D08],xmm0
+// ---------- INJECTING HERE ----------
+DaysGone.exe+6D62A0: F3 0F 10 7E 24           - movss xmm7,[rsi+24]
+// ---------- DONE INJECTING  ----------
+DaysGone.exe+6D62A5: F3 0F 10 76 20           - movss xmm6,[rsi+20]
+DaysGone.exe+6D62AA: F3 41 0F 59 F9           - mulss xmm7,xmm9
+DaysGone.exe+6D62AF: F3 41 0F 59 F1           - mulss xmm6,xmm9
+DaysGone.exe+6D62B4: FF 15 FE B4 10 03        - call qword ptr [DaysGone.exe+37E17B8]
+DaysGone.exe+6D62BA: F3 0F 10 9B 08 1D 00 00  - movss xmm3,[rbx+00001D08]
+DaysGone.exe+6D62C2: F3 0F 5C FE              - subss xmm7,xmm6
+DaysGone.exe+6D62C6: 8B 8B 00 1D 00 00        - mov ecx,[rbx+00001D00]
+DaysGone.exe+6D62CC: 0F 28 C3                 - movaps xmm0,xmm3
+DaysGone.exe+6D62CF: 66 0F 6E D0              - movd xmm2,eax
+DaysGone.exe+6D62D3: 0F 5B D2                 - cvtdq2ps xmm2,xmm2
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>"无限耐力"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"DaysGone.exe"+87FDB7)
+define(bytes,F3 0F 11 02 C3)
+
+[ENABLE]
+assert(address,bytes)
+
+address:
+  db 90 90 90 90 C3
+
+[DISABLE]
+address:
+  db bytes
+
+{
+// ORIGINAL CODE - INJECTION POINT: DaysGone.exe+87FDB7
+
+DaysGone.exe+87FDA8: CC           - int 3 
+DaysGone.exe+87FDA9: CC           - int 3 
+DaysGone.exe+87FDAA: CC           - int 3 
+DaysGone.exe+87FDAB: CC           - int 3 
+DaysGone.exe+87FDAC: CC           - int 3 
+DaysGone.exe+87FDAD: CC           - int 3 
+DaysGone.exe+87FDAE: CC           - int 3 
+DaysGone.exe+87FDAF: CC           - int 3 
+DaysGone.exe+87FDB0: 0F 57 C0     - xorps xmm0,xmm0
+DaysGone.exe+87FDB3: F2 0F 5A C2  - cvtsd2ss xmm0,xmm2
+// ---------- INJECTING HERE ----------
+DaysGone.exe+87FDB7: F3 0F 11 02  - movss [rdx],xmm0
+// ---------- DONE INJECTING  ----------
+DaysGone.exe+87FDBB: C3           - ret 
+DaysGone.exe+87FDBC: CC           - int 3 
+DaysGone.exe+87FDBD: CC           - int 3 
+DaysGone.exe+87FDBE: CC           - int 3 
+DaysGone.exe+87FDBF: CC           - int 3 
+DaysGone.exe+87FDC0: 44 89 02     - mov [rdx],r8d
+DaysGone.exe+87FDC3: C3           - ret 
+DaysGone.exe+87FDC4: CC           - int 3 
+DaysGone.exe+87FDC5: CC           - int 3 
+DaysGone.exe+87FDC6: CC           - int 3 
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>14</ID>
+      <Description>"消音器无限耐久"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"DaysGone.exe"+853157)
+define(bytes,FF C8)
+
+[ENABLE]
+assert(address,bytes)
+
+address:
+  db 90 90
+  // db FF C0 // inc eax
+
+[DISABLE]
+address:
+  db bytes
+
+{
+// ORIGINAL CODE - INJECTION POINT: DaysGone.exe+853157
+
+DaysGone.exe+853132: 33 D2                    - xor edx,edx
+DaysGone.exe+853134: 48 8D 8B 98 0C 00 00     - lea rcx,[rbx+00000C98]
+DaysGone.exe+85313B: E8 D0 DF C2 FF           - call DaysGone.exe+481110
+DaysGone.exe+853140: 84 C0                    - test al,al
+DaysGone.exe+853142: 74 5A                    - je DaysGone.exe+85319E
+DaysGone.exe+853144: 8B 83 78 03 00 00        - mov eax,[rbx+00000378]
+DaysGone.exe+85314A: 85 C0                    - test eax,eax
+DaysGone.exe+85314C: 7E 50                    - jle DaysGone.exe+85319E
+DaysGone.exe+85314E: 80 BB 48 03 00 00 02     - cmp byte ptr [rbx+00000348],02
+DaysGone.exe+853155: 75 47                    - jne DaysGone.exe+85319E
+// ---------- INJECTING HERE ----------
+DaysGone.exe+853157: FF C8                    - dec eax
+// ---------- DONE INJECTING  ----------
+DaysGone.exe+853159: 89 83 78 03 00 00        - mov [rbx+00000378],eax
+DaysGone.exe+85315F: 85 C0                    - test eax,eax
+DaysGone.exe+853161: 7F 3B                    - jg DaysGone.exe+85319E
+DaysGone.exe+853163: 48 8B CB                 - mov rcx,rbx
+DaysGone.exe+853166: E8 B5 24 88 00           - call DaysGone.exe+10D5620
+DaysGone.exe+85316B: 33 D2                    - xor edx,edx
+DaysGone.exe+85316D: C6 83 A0 0C 00 00 01     - mov byte ptr [rbx+00000CA0],01
+DaysGone.exe+853174: 48 8D 8B 98 0C 00 00     - lea rcx,[rbx+00000C98]
+DaysGone.exe+85317B: E8 00 EC 01 01           - call DaysGone.exe+1871D80
+DaysGone.exe+853180: 48 83 BB 70 0C 00 00 00  - cmp qword ptr [rbx+00000C70],00
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>27</ID>
+      <Description>"满油"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"DaysGone.exe"+7AFF9E)
+define(bytes,F3 0F 11 83 D4 00 00 00)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$1000,"DaysGone.exe"+7AFF9E)
+
+label(code)
+label(return)
+
+newmem:
+  movss xmm0,[rbx+000000D0]
+code:
+  movss [rbx+000000D4],xmm0
+  jmp return
+
+address:
+  jmp newmem
+  nop 3
+return:
+
+[DISABLE]
+address:
+  db bytes
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: DaysGone.exe+7AFF9E
+
+DaysGone.exe+7AFF6C: F3 44 0F 5E 83 68 01 00 00  - divss xmm8,[rbx+00000168]
+DaysGone.exe+7AFF75: 48 8B CF                    - mov rcx,rdi
+DaysGone.exe+7AFF78: F3 41 0F 59 F0              - mulss xmm6,xmm8
+DaysGone.exe+7AFF7D: E8 5E 09 01 00              - call DaysGone.exe+7C08E0
+DaysGone.exe+7AFF82: 84 C0                       - test al,al
+DaysGone.exe+7AFF84: 74 08                       - je DaysGone.exe+7AFF8E
+DaysGone.exe+7AFF86: F3 0F 59 B3 6C 01 00 00     - mulss xmm6,[rbx+0000016C]
+DaysGone.exe+7AFF8E: F3 0F 10 83 D4 00 00 00     - movss xmm0,[rbx+000000D4]
+DaysGone.exe+7AFF96: F3 0F 5C C6                 - subss xmm0,xmm6
+DaysGone.exe+7AFF9A: F3 0F 5F C7                 - maxss xmm0,xmm7
+// ---------- INJECTING HERE ----------
+DaysGone.exe+7AFF9E: F3 0F 11 83 D4 00 00 00     - movss [rbx+000000D4],xmm0
+// ---------- DONE INJECTING  ----------
+DaysGone.exe+7AFFA6: F3 0F 10 8B D0 00 00 00     - movss xmm1,[rbx+000000D0]
+DaysGone.exe+7AFFAE: F3 0F 10 35 B6 47 07 03     - movss xmm6,[DaysGone.exe+382476C]
+DaysGone.exe+7AFFB6: 44 0F 28 44 24 40           - movaps xmm8,[rsp+40]
+DaysGone.exe+7AFFBC: 48 8B B4 24 80 00 00 00     - mov rsi,[rsp+00000080]
+DaysGone.exe+7AFFC4: 41 0F 2F C9                 - comiss xmm1,xmm9
+DaysGone.exe+7AFFC8: 44 0F 28 4C 24 30           - movaps xmm9,[rsp+30]
+DaysGone.exe+7AFFCE: 76 1E                       - jna DaysGone.exe+7AFFEE
+DaysGone.exe+7AFFD0: F3 0F 10 83 D4 00 00 00     - movss xmm0,[rbx+000000D4]
+DaysGone.exe+7AFFD8: F3 0F 5E C1                 - divss xmm0,xmm1
+DaysGone.exe+7AFFDC: 0F 2F C7                    - comiss xmm0,xmm7
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>32</ID>
+      <Description>"补给材料"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"DaysGone.exe"+6645F1)
+define(bytes,74 03 03 5F 28)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$1000,"DaysGone.exe"+6645F1)
+
+label(return)
+
+newmem:
+  je DaysGone.exe+6645F6
+  mov [rdi+28],#10
+  add ebx,[rdi+28]
+  jmp return
+
+address:
+  jmp newmem
+return:
+
+[DISABLE]
+address:
+  db bytes
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: DaysGone.exe+6645F1
+
+DaysGone.exe+6645CA: C6 45 77 00     - mov byte ptr [rbp+77],00
+DaysGone.exe+6645CE: 48 03 38        - add rdi,[rax]
+DaysGone.exe+6645D1: 48 8D 45 67     - lea rax,[rbp+67]
+DaysGone.exe+6645D5: 48 89 44 24 20  - mov [rsp+20],rax
+DaysGone.exe+6645DA: 48 8D 4F 08     - lea rcx,[rdi+08]
+DaysGone.exe+6645DE: E8 9D 0E AE 01  - call DaysGone.exe+2145480
+DaysGone.exe+6645E3: 48 8B D6        - mov rdx,rsi
+DaysGone.exe+6645E6: 48 8D 4D D7     - lea rcx,[rbp-29]
+DaysGone.exe+6645EA: E8 71 DE AD 01  - call DaysGone.exe+2142460
+DaysGone.exe+6645EF: 84 C0           - test al,al
+// ---------- INJECTING HERE ----------
+DaysGone.exe+6645F1: 74 03           - je DaysGone.exe+6645F6
+// ---------- DONE INJECTING  ----------
+DaysGone.exe+6645F3: 03 5F 28        - add ebx,[rdi+28]
+DaysGone.exe+6645F6: 48 8B 4D E7     - mov rcx,[rbp-19]
+DaysGone.exe+6645FA: 48 85 C9        - test rcx,rcx
+DaysGone.exe+6645FD: 74 05           - je DaysGone.exe+664604
+DaysGone.exe+6645FF: E8 BC 7B 0B 01  - call DaysGone.exe+171C1C0
+DaysGone.exe+664604: 48 8B 4D D7     - mov rcx,[rbp-29]
+DaysGone.exe+664608: 48 85 C9        - test rcx,rcx
+DaysGone.exe+66460B: 74 05           - je DaysGone.exe+664612
+DaysGone.exe+66460D: E8 AE 7B 0B 01  - call DaysGone.exe+171C1C0
+DaysGone.exe+664612: 8B 4D 03        - mov ecx,[rbp+03]
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>23</ID>
+      <Description>"无限补给"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>// 角色死亡,或过场动画时会造成游戏卡屏
+
+define(address,"DaysGone.exe"+63E317)
+define(bytes,2B C8 41 89 49 10)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$1000,"DaysGone.exe"+63E317)
+label(return)
+
+newmem:
+  mov [r9+10],ecx
+  jmp return
+
+address:
+  jmp newmem
+  nop
+return:
+
+[DISABLE]
+address:
+  db bytes
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: DaysGone.exe+63E317
+
+DaysGone.exe+63E2FD: 79 1F        - jns DaysGone.exe+63E31E
+DaysGone.exe+63E2FF: 8B 49 10     - mov ecx,[rcx+10]
+DaysGone.exe+63E302: 8B C2        - mov eax,edx
+DaysGone.exe+63E304: 99           - cdq 
+DaysGone.exe+63E305: 44 8B C0     - mov r8d,eax
+DaysGone.exe+63E308: 8B C1        - mov eax,ecx
+DaysGone.exe+63E30A: 44 33 C2     - xor r8d,edx
+DaysGone.exe+63E30D: 44 2B C2     - sub r8d,edx
+DaysGone.exe+63E310: 44 3B C1     - cmp r8d,ecx
+DaysGone.exe+63E313: 41 0F 4E C0  - cmovle eax,r8d
+// ---------- INJECTING HERE ----------
+DaysGone.exe+63E317: 2B C8        - sub ecx,eax
+// ---------- DONE INJECTING  ----------
+DaysGone.exe+63E319: 41 89 49 10  - mov [r9+10],ecx
+DaysGone.exe+63E31D: C3           - ret 
+DaysGone.exe+63E31E: 33 C0        - xor eax,eax
+DaysGone.exe+63E320: C3           - ret 
+DaysGone.exe+63E321: CC           - int 3 
+DaysGone.exe+63E322: CC           - int 3 
+DaysGone.exe+63E323: CC           - int 3 
+DaysGone.exe+63E324: CC           - int 3 
+DaysGone.exe+63E325: CC           - int 3 
+DaysGone.exe+63E326: CC           - int 3 
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>3</ID>
+      <Description>"无限上缴,零件"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>// 过场动画时会造成游戏卡屏
+
+define(address,"DaysGone.exe"+64A054)
+define(bytes,2B C7 89 43 48)
+
+[ENABLE]
+assert(address,bytes)
+
+address:
+ db 90 90 90 90 90
+
+[DISABLE]
+address:
+  db bytes
+
+{
+// ORIGINAL CODE - INJECTION POINT: DaysGone.exe+64A054
+
+DaysGone.exe+64A03F: 79 6A        - jns DaysGone.exe+64A0AB
+DaysGone.exe+64A041: 8B C7        - mov eax,edi
+DaysGone.exe+64A043: 99           - cdq 
+DaysGone.exe+64A044: 8B C8        - mov ecx,eax
+DaysGone.exe+64A046: 8B 43 48     - mov eax,[rbx+48]
+DaysGone.exe+64A049: 33 CA        - xor ecx,edx
+DaysGone.exe+64A04B: 8B F8        - mov edi,eax
+DaysGone.exe+64A04D: 2B CA        - sub ecx,edx
+DaysGone.exe+64A04F: 3B C8        - cmp ecx,eax
+DaysGone.exe+64A051: 0F 4E F9     - cmovle edi,ecx
+// ---------- INJECTING HERE ----------
+DaysGone.exe+64A054: 2B C7        - sub eax,edi
+// ---------- DONE INJECTING  ----------
+DaysGone.exe+64A056: 89 43 48     - mov [rbx+48],eax
+DaysGone.exe+64A059: 85 FF        - test edi,edi
+DaysGone.exe+64A05B: 7E 50        - jle DaysGone.exe+64A0AD
+DaysGone.exe+64A05D: 83 7B 48 00  - cmp dword ptr [rbx+48],00
+DaysGone.exe+64A061: 7F 11        - jg DaysGone.exe+64A074
+DaysGone.exe+64A063: F6 43 30 01  - test byte ptr [rbx+30],01
+DaysGone.exe+64A067: 75 0B        - jne DaysGone.exe+64A074
+DaysGone.exe+64A069: 48 8B 43 38  - mov rax,[rbx+38]
+DaysGone.exe+64A06D: 48 8D 4B 38  - lea rcx,[rbx+38]
+DaysGone.exe+64A071: FF 50 28     - call qword ptr [rax+28]
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>29</ID>
+      <Description>"技能点"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"DaysGone.exe"+3D4E6A)
+define(bytes,39 43 28 48 8B 5C 24 40)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$1000,"DaysGone.exe"+3D4E6A)
+
+label(code)
+label(return)
+
+newmem:
+  mov [rbx+28],#10
+code:
+  cmp [rbx+28],eax
+  mov rbx,[rsp+40]
+  jmp return
+
+address:
+  jmp newmem
+  nop 3
+return:
+
+[DISABLE]
+address:
+  db bytes
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: DaysGone.exe+3D4E6A
+
+DaysGone.exe+3D4E43: E8 B8 9B 26 00     - call DaysGone.exe+63EA00
+DaysGone.exe+3D4E48: 48 85 C0           - test rax,rax
+DaysGone.exe+3D4E4B: 74 03              - je DaysGone.exe+3D4E50
+DaysGone.exe+3D4E4D: 8B 40 34           - mov eax,[rax+34]
+DaysGone.exe+3D4E50: 48 63 C8           - movsxd  rcx,eax
+DaysGone.exe+3D4E53: 48 8B 43 70        - mov rax,[rbx+70]
+DaysGone.exe+3D4E57: 48 03 C9           - add rcx,rcx
+DaysGone.exe+3D4E5A: 48 89 7C 24 20     - mov [rsp+20],rdi
+DaysGone.exe+3D4E5F: 48 8B 4C C8 08     - mov rcx,[rax+rcx*8+08]
+DaysGone.exe+3D4E64: 8B 81 80 00 00 00  - mov eax,[rcx+00000080]
+// ---------- INJECTING HERE ----------
+DaysGone.exe+3D4E6A: 39 43 28           - cmp [rbx+28],eax
+// ---------- DONE INJECTING  ----------
+DaysGone.exe+3D4E6D: 48 8B 5C 24 40     - mov rbx,[rsp+40]
+DaysGone.exe+3D4E72: 0F 9D C0           - setge al
+DaysGone.exe+3D4E75: 48 83 C4 30        - add rsp,30
+DaysGone.exe+3D4E79: 5F                 - pop rdi
+DaysGone.exe+3D4E7A: C3                 - ret 
+DaysGone.exe+3D4E7B: CC                 - int 3 
+DaysGone.exe+3D4E7C: CC                 - int 3 
+DaysGone.exe+3D4E7D: CC                 - int 3 
+DaysGone.exe+3D4E7E: CC                 - int 3 
+DaysGone.exe+3D4E7F: CC                 - int 3 
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>31</ID>
+      <Description>"无限补给2"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"DaysGone.exe"+63E2F3)
+define(bytes,85 D2 7E 06 01 51 10)
+
+[ENABLE]
+assert(address,bytes)
+
+address:
+  mov eax,2
+  mov [rcx+10],eax
+  ret
+  align 4 CC
+
+[DISABLE]
+address:
+  db 85 D2 7E 06 01 51 10 8B C2 C3 79 1F 8B 49 10 8B C2 99 44 8B C0 8B C1
+
+{
+// ORIGINAL CODE - INJECTION POINT: DaysGone.exe+63E2F3
+
+DaysGone.exe+63E2E4: 41 89 49 10  - mov [r9+10],ecx
+DaysGone.exe+63E2E8: C3           - ret 
+DaysGone.exe+63E2E9: CC           - int 3 
+DaysGone.exe+63E2EA: CC           - int 3 
+DaysGone.exe+63E2EB: CC           - int 3 
+DaysGone.exe+63E2EC: CC           - int 3 
+DaysGone.exe+63E2ED: CC           - int 3 
+DaysGone.exe+63E2EE: CC           - int 3 
+DaysGone.exe+63E2EF: CC           - int 3 
+DaysGone.exe+63E2F0: 4C 8B C9     - mov r9,rcx
+// ---------- INJECTING HERE ----------
+DaysGone.exe+63E2F3: 85 D2        - test edx,edx
+// ---------- DONE INJECTING  ----------
+DaysGone.exe+63E2F5: 7E 06        - jle DaysGone.exe+63E2FD
+DaysGone.exe+63E2F7: 01 51 10     - add [rcx+10],edx
+DaysGone.exe+63E2FA: 8B C2        - mov eax,edx
+DaysGone.exe+63E2FC: C3           - ret 
+DaysGone.exe+63E2FD: 79 1F        - jns DaysGone.exe+63E31E
+DaysGone.exe+63E2FF: 8B 49 10     - mov ecx,[rcx+10]
+DaysGone.exe+63E302: 8B C2        - mov eax,edx
+DaysGone.exe+63E304: 99           - cdq 
+DaysGone.exe+63E305: 44 8B C0     - mov r8d,eax
+DaysGone.exe+63E308: 8B C1        - mov eax,ecx
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>9</ID>
+      <Description>"pos"</Description>
+      <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"DaysGone.exe"+52D78C)
+define(bytes,F3 41 0F 10 86 38 01 00 00)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$1000,"DaysGone.exe"+52D78C)
+
+label(code)
+label(return)
+label(pPosZ)
+
+newmem:
+  pushf
+  test r15,r15 // r15==0 is player
+  jnz code
+  push rax
+  lea rax,[r14+00000138]
+  mov [pPosZ],rax
+  pop rax
+
+code:
+  popf
+  movss xmm0,[r14+00000138]
+  jmp return
+  align 10 CC
+pPosZ:
+  dq 0
+
+address:
+  jmp newmem
+  nop 4
+return:
+registerSymbol(pPosZ)
+[DISABLE]
+address:
+  db bytes
+
+unregisterSymbol(pPosZ)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: DaysGone.exe+52D78C
+
+DaysGone.exe+52D769: 4C 8D 43 0C                 - lea r8,[rbx+0C]
+DaysGone.exe+52D76D: 48 8B D6                    - mov rdx,rsi
+DaysGone.exe+52D770: 48 8B 01                    - mov rax,[rcx]
+DaysGone.exe+52D773: FF 90 C0 03 00 00           - call qword ptr [rax+000003C0]
+DaysGone.exe+52D779: 84 C0                       - test al,al
+DaysGone.exe+52D77B: 74 21                       - je DaysGone.exe+52D79E
+DaysGone.exe+52D77D: F2 0F 10 06                 - movsd xmm0,[rsi]
+DaysGone.exe+52D781: F2 0F 11 43 10              - movsd [rbx+10],xmm0
+DaysGone.exe+52D786: 8B 46 08                    - mov eax,[rsi+08]
+DaysGone.exe+52D789: 89 43 18                    - mov [rbx+18],eax
+// ---------- INJECTING HERE ----------
+DaysGone.exe+52D78C: F3 41 0F 10 86 38 01 00 00  - movss xmm0,[r14+00000138]
+// ---------- DONE INJECTING  ----------
+DaysGone.exe+52D795: F3 0F 11 43 24              - movss [rbx+24],xmm0
+DaysGone.exe+52D79A: C6 43 08 01                 - mov byte ptr [rbx+08],01
+DaysGone.exe+52D79E: 80 BF D8 04 00 00 00        - cmp byte ptr [rdi+000004D8],00
+DaysGone.exe+52D7A5: F3 44 0F 10 4C 24 68        - movss xmm9,[rsp+68]
+DaysGone.exe+52D7AC: F3 0F 10 7C 24 64           - movss xmm7,[rsp+64]
+DaysGone.exe+52D7B2: F3 0F 10 74 24 60           - movss xmm6,[rsp+60]
+DaysGone.exe+52D7B8: F3 44 0F 10 44 24 6C        - movss xmm8,[rsp+6C]
+DaysGone.exe+52D7BF: F3 44 0F 11 4C 24 20        - movss [rsp+20],xmm9
+DaysGone.exe+52D7C6: F3 0F 11 7C 24 30           - movss [rsp+30],xmm7
+DaysGone.exe+52D7CC: F3 0F 11 B5 18 01 00 00     - movss [rbp+00000118],xmm6
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>10</ID>
+          <Description>"x"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Float</VariableType>
+          <Address>[pPosZ]-8</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>12</ID>
+          <Description>"y"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Float</VariableType>
+          <Address>[pPosZ]-4</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>11</ID>
+          <Description>"z"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Float</VariableType>
+          <Address>[pPosZ]</Address>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry Color="20000000">
+      <Description>耐力 :movss [rdx],xmm0</Description>
+      <AddressString>DaysGone.exe+87FDB7</AddressString>
+      <Before>
+        <Byte>C0</Byte>
+        <Byte>F2</Byte>
+        <Byte>0F</Byte>
+        <Byte>5A</Byte>
+        <Byte>C2</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>02</Byte>
+      </Actual>
+      <After>
+        <Byte>C3</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>消耗子弹 :dec [r14+00002800]</Description>
+      <AddressString>DaysGone.exe+81D5C6</AddressString>
+      <Before>
+        <Byte>03</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>75</Byte>
+        <Byte>07</Byte>
+      </Before>
+      <Actual>
+        <Byte>41</Byte>
+        <Byte>FF</Byte>
+        <Byte>8E</Byte>
+        <Byte>00</Byte>
+        <Byte>28</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>40</Byte>
+        <Byte>84</Byte>
+        <Byte>F6</Byte>
+        <Byte>75</Byte>
+        <Byte>1D</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>增加金币 :add [rcx+74],edx</Description>
+      <AddressString>DaysGone.exe+5A0E20</AddressString>
+      <Before>
+        <Byte>5B</Byte>
+        <Byte>C3</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+      </Before>
+      <Actual>
+        <Byte>01</Byte>
+        <Byte>51</Byte>
+        <Byte>74</Byte>
+      </Actual>
+      <After>
+        <Byte>8B</Byte>
+        <Byte>41</Byte>
+        <Byte>74</Byte>
+        <Byte>C3</Byte>
+        <Byte>CC</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>上缴材料 :mov [rbx+48],eax</Description>
+      <AddressString>DaysGone.exe+64A056</AddressString>
+      <Before>
+        <Byte>0F</Byte>
+        <Byte>4E</Byte>
+        <Byte>F9</Byte>
+        <Byte>2B</Byte>
+        <Byte>C7</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>43</Byte>
+        <Byte>48</Byte>
+      </Actual>
+      <After>
+        <Byte>85</Byte>
+        <Byte>FF</Byte>
+        <Byte>7E</Byte>
+        <Byte>50</Byte>
+        <Byte>83</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>pos z :movss xmm0,[r14+00000138]</Description>
+      <AddressString>DaysGone.exe+52D78C</AddressString>
+      <Before>
+        <Byte>46</Byte>
+        <Byte>08</Byte>
+        <Byte>89</Byte>
+        <Byte>43</Byte>
+        <Byte>18</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>41</Byte>
+        <Byte>0F</Byte>
+        <Byte>10</Byte>
+        <Byte>86</Byte>
+        <Byte>38</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>43</Byte>
+        <Byte>24</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>跳跃下坠状态 :mov [rdi+00000198],bl</Description>
+      <AddressString>DaysGone.exe+24C60C6</AddressString>
+      <Before>
+        <Byte>B7</Byte>
+        <Byte>99</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>88</Byte>
+        <Byte>9F</Byte>
+        <Byte>98</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>40</Byte>
+        <Byte>88</Byte>
+        <Byte>B7</Byte>
+        <Byte>99</Byte>
+        <Byte>01</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>冲锋枪消耗子弹 :mov [rdi+00002800],eax</Description>
+      <AddressString>DaysGone.exe+82FAA4</AddressString>
+      <Before>
+        <Byte>FF</Byte>
+        <Byte>85</Byte>
+        <Byte>C0</Byte>
+        <Byte>78</Byte>
+        <Byte>06</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>87</Byte>
+        <Byte>00</Byte>
+        <Byte>28</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>9F</Byte>
+        <Byte>D0</Byte>
+        <Byte>27</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>冲锋枪消耗子弹2 :mov [rbx+00002800],eax</Description>
+      <AddressString>DaysGone.exe+82CF88</AddressString>
+      <Before>
+        <Byte>FF</Byte>
+        <Byte>85</Byte>
+        <Byte>C0</Byte>
+        <Byte>78</Byte>
+        <Byte>06</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>83</Byte>
+        <Byte>00</Byte>
+        <Byte>28</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>83</Byte>
+        <Byte>78</Byte>
+        <Byte>27</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>消音器耐久 :mov [rbx+00000378],eax</Description>
+      <AddressString>DaysGone.exe+853159</AddressString>
+      <Before>
+        <Byte>02</Byte>
+        <Byte>75</Byte>
+        <Byte>47</Byte>
+        <Byte>FF</Byte>
+        <Byte>C8</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>83</Byte>
+        <Byte>78</Byte>
+        <Byte>03</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>85</Byte>
+        <Byte>C0</Byte>
+        <Byte>7F</Byte>
+        <Byte>3B</Byte>
+        <Byte>48</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>准星扩散 movss [rdi+00002974],xmm1</Description>
+      <AddressString>DaysGone.exe+8410D5</AddressString>
+      <Before>
+        <Byte>28</Byte>
+        <Byte>C8</Byte>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>CF</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>8F</Byte>
+        <Byte>74</Byte>
+        <Byte>29</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>E8</Byte>
+        <Byte>2E</Byte>
+        <Byte>84</Byte>
+        <Byte>FD</Byte>
+        <Byte>FF</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>camera y:movups [rdi+00000120],xmm0</Description>
+      <AddressString>DaysGone.exe+43AC47</AddressString>
+      <Before>
+        <Byte>87</Byte>
+        <Byte>80</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>87</Byte>
+        <Byte>20</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>0F</Byte>
+        <Byte>10</Byte>
+        <Byte>87</Byte>
+        <Byte>90</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>访问后座力 :movss xmm6,[rsi+20]</Description>
+      <AddressString>DaysGone.exe+6D62A5</AddressString>
+      <Before>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>10</Byte>
+        <Byte>7E</Byte>
+        <Byte>24</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>10</Byte>
+        <Byte>76</Byte>
+        <Byte>20</Byte>
+      </Actual>
+      <After>
+        <Byte>F3</Byte>
+        <Byte>41</Byte>
+        <Byte>0F</Byte>
+        <Byte>59</Byte>
+        <Byte>F9</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>消耗燃烧瓶 :mov [r9+10],ecx</Description>
+      <AddressString>DaysGone.exe+63E319</AddressString>
+      <Before>
+        <Byte>0F</Byte>
+        <Byte>4E</Byte>
+        <Byte>C0</Byte>
+        <Byte>2B</Byte>
+        <Byte>C8</Byte>
+      </Before>
+      <Actual>
+        <Byte>41</Byte>
+        <Byte>89</Byte>
+        <Byte>49</Byte>
+        <Byte>10</Byte>
+      </Actual>
+      <After>
+        <Byte>C3</Byte>
+        <Byte>33</Byte>
+        <Byte>C0</Byte>
+        <Byte>C3</Byte>
+        <Byte>CC</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>技能点数 :cmp [rbx+28],eax</Description>
+      <AddressString>DaysGone.exe+3D4E6A</AddressString>
+      <Before>
+        <Byte>81</Byte>
+        <Byte>80</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>39</Byte>
+        <Byte>43</Byte>
+        <Byte>28</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>5C</Byte>
+        <Byte>24</Byte>
+        <Byte>40</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>补给制作材料 :add ebx,[rdi+28]</Description>
+      <AddressString>DaysGone.exe+6645F3</AddressString>
+      <Before>
+        <Byte>01</Byte>
+        <Byte>84</Byte>
+        <Byte>C0</Byte>
+        <Byte>74</Byte>
+        <Byte>03</Byte>
+      </Before>
+      <Actual>
+        <Byte>03</Byte>
+        <Byte>5F</Byte>
+        <Byte>28</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>4D</Byte>
+        <Byte>E7</Byte>
+        <Byte>48</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>hp :movss [r12+00001FC4],xmm0</Description>
+      <AddressString>DaysGone.exe+6DFAF5</AddressString>
+      <Before>
+        <Byte>DB</Byte>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>5C</Byte>
+        <Byte>C7</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>41</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>84</Byte>
+        <Byte>24</Byte>
+        <Byte>C4</Byte>
+        <Byte>1F</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>41</Byte>
+        <Byte>38</Byte>
+        <Byte>9C</Byte>
+        <Byte>24</Byte>
+        <Byte>D3</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+  <Comments>nl
+nl+4 耐力上线
+pos(float):x y z
+-------------------
+player|enemy
+8:72|8
+1C:350|10
+34:350|10
+1B8:3|0
+1BC:3|0
+-------------------
+剧情[进入幸运矿坑]前先关闭所有脚本，不然捡不起来钥匙
+</Comments>
+</CheatTable>
